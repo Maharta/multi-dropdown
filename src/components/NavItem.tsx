@@ -6,7 +6,7 @@ interface NavItemProps {
 }
 
 function NavItem(props: NavItemProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <li className="nav-item">
