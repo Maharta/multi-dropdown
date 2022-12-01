@@ -3,32 +3,34 @@ import { ReactComponent as CogIcon } from "../assets/cog.svg";
 import { ReactComponent as ArrowIcon } from "../assets/arrow.svg";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import useMeasure from "react-use-measure";
+import useStateCallback from "../hooks/useStateCallback";
 
 type Menu = "main" | "settings" | "sub-settings";
 
-let isGoBack: boolean = true;
+let isGoingBack: boolean;
 function DropdownMenu() {
   const [activeMenu, setActiveMenu] = useState<Menu>("main"); // settings, animals
+  const [isGoingTo, setIsGoingTo] = useStateCallback<Menu | null>(null);
   const [ref, { height }] = useMeasure();
 
   function goToSettings() {
-    isGoBack = false;
-    setActiveMenu("settings");
+    isGoingBack = false;
+    setIsGoingTo("settings", () => setActiveMenu("settings"));
   }
 
   function goBackToMain() {
-    isGoBack = true;
-    setActiveMenu("main");
+    isGoingBack = true;
+    setIsGoingTo("main", () => setActiveMenu("main"));
   }
 
   function goTosubSetting() {
-    isGoBack = false;
-    setActiveMenu("sub-settings");
+    isGoingBack = false;
+    setIsGoingTo("sub-settings", () => setActiveMenu("sub-settings"));
   }
 
   function goBackToSetting() {
-    isGoBack = true;
-    setActiveMenu("settings");
+    isGoingBack = true;
+    setIsGoingTo("settings", () => setActiveMenu("settings"));
   }
 
   return (
@@ -48,7 +50,7 @@ function DropdownMenu() {
             {activeMenu === "main" && (
               <motion.div
                 initial={{
-                  x: isGoBack ? "-110%" : "110%",
+                  x: isGoingBack ? "-110%" : "110%",
                 }}
                 animate={{ x: "0" }}
                 exit={{ x: "-110%" }}
@@ -62,9 +64,9 @@ function DropdownMenu() {
             )}
             {activeMenu === "settings" && (
               <motion.div
-                initial={{ x: isGoBack ? "-110%" : "110%" }}
+                initial={{ x: isGoingBack ? "-110%" : "110%" }}
                 animate={{ x: "0" }}
-                exit={{ x: isGoBack ? "110%" : "-110%" }}
+                exit={{ x: isGoingTo === "sub-settings" ? "-110%" : "110%" }}
                 key="settings"
               >
                 <DropdownItem onClick={goBackToMain} leftIcon={<ArrowIcon />}>
