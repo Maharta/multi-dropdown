@@ -50,7 +50,7 @@ function DropdownMenu() {
             {activeMenu === "main" && (
               <motion.div
                 initial={{
-                  x: isGoingBack ? "-110%" : "110%",
+                  x: "-110%",
                 }}
                 animate={{ x: "0" }}
                 exit={{ x: "-110%" }}
